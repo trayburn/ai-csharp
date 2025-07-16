@@ -1,0 +1,71 @@
+@page
+@model WeatherDemo.Web.Pages.WeatherModel
+@{
+    ViewData["Title"] = "Weather Report";
+}
+
+<div class="weather-container">
+    <h2 class="weather-title">🌤️ Weather Report for 5 Random Cities</h2>
+    <table class="weather-table">
+        <thead>
+            <tr>
+                <th>City</th>
+                <th>Description</th>
+                <th>Temperature (°C)</th>
+                <th>Temperature (°F)</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var report in Model.Reports)
+        {
+            <tr>
+                <td>@report.City</td>
+                <td>@report.Description</td>
+                <td>@report.TemperatureC</td>
+                <td>@report.TemperatureF</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<style>
+.weather-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #f8fafc;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 32px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+.weather-title {
+    text-align: center;
+    color: #2563eb;
+    margin-bottom: 24px;
+    font-size: 2rem;
+    font-weight: 600;
+}
+.weather-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.weather-table th, .weather-table td {
+    padding: 12px 16px;
+    text-align: center;
+}
+.weather-table th {
+    background: #2563eb;
+    color: #fff;
+    font-weight: 500;
+}
+.weather-table tr:nth-child(even) {
+    background: #e0e7ff;
+}
+.weather-table tr:hover {
+    background: #c7d2fe;
+}
+</style>
