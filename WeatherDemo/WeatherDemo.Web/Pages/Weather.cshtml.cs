@@ -8,10 +8,16 @@ namespace WeatherDemo.Web.Pages
     {
         public List<WeatherReport> Reports { get; set; }
 
+        private readonly WeatherService _weatherService;
+
+        public WeatherModel(WeatherService weatherService)
+        {
+            _weatherService = weatherService;
+        }
+
         public void OnGet()
         {
-            var service = new WeatherService();
-            Reports = service.GetRandomWeatherReports();
+            Reports = _weatherService.GetRandomWeatherReports();
         }
     }
 }

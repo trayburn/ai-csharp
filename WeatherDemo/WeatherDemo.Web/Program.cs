@@ -1,7 +1,10 @@
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton<WeatherDemo.Library.IRandomProvider, WeatherDemo.Library.RandomProvider>();
+builder.Services.AddTransient<WeatherDemo.Library.WeatherService>();
 
 var app = builder.Build();
 

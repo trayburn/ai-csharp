@@ -15,21 +15,27 @@ namespace WeatherDemo.Library
             "Sunny", "Cloudy", "Rainy", "Windy", "Stormy", "Foggy", "Snowy"
         };
 
+        private readonly IRandomProvider _randomProvider;
+
+        public WeatherService(IRandomProvider randomProvider)
+        {
+            _randomProvider = randomProvider;
+        }
+
         public List<WeatherReport> GetRandomWeatherReports(int count = 5)
         {
-            var rng = new Random();
             var selectedCities = new HashSet<string>();
             var reports = new List<WeatherReport>();
             while (selectedCities.Count < count)
             {
-                var city = Cities[rng.Next(Cities.Length)];
+                var city = Cities[_randomProvider.Next(0, Cities.Length)];
                 if (selectedCities.Add(city))
                 {
                     reports.Add(new WeatherReport
                     {
                         City = city,
-                        Description = Descriptions[rng.Next(Descriptions.Length)],
-                        TemperatureC = rng.Next(-10, 35)
+                        Description = Descriptions[_randomProvider.Next(0, Descriptions.Length)],
+                        TemperatureC = _randomProvider.Next(-10, 35)
                     });
                 }
             }
