@@ -27,8 +27,7 @@ app.MapGet("/", context => {
     context.Response.Redirect("/Weather");
     return System.Threading.Tasks.Task.CompletedTask;
 });
-app.MapStaticAssets();
-app.MapRazorPages()
-   .WithStaticAssets();
+app.UseStaticFiles();
+app.MapRazorPages();
 
 app.Run();
