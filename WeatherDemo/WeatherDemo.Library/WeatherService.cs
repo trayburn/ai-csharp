@@ -16,7 +16,13 @@ namespace WeatherDemo.Library
             ("Moscow", "Europe"),
             ("Rio de Janeiro", "South America"),
             ("Cape Town", "Africa"),
-            ("Toronto", "North America")
+            ("Toronto", "North America"),
+            ("Mumbai", "Asia"),
+            ("Melbourne", "Australia"),
+            ("Buenos Aires", "South America"),
+            ("Cairo", "Africa"),
+            ("McMurdo Station", "Antarctica"),
+            ("Rothera Research Station", "Antarctica")
         };
 
         private static readonly string[] Descriptions = new[]

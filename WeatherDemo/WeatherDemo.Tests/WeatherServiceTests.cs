@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using WeatherDemo.Library;
 using Xunit;
@@ -36,7 +37,7 @@ namespace WeatherDemo.Tests
         {
             // Arrange
             var mockRandom = new Mock<IRandomProvider>();
-            mockRandom.SetupSequence(r => r.Next(0, 10))
+            mockRandom.SetupSequence(r => r.Next(0, 16))
                 .Returns(0).Returns(1).Returns(2).Returns(3).Returns(4);
             mockRandom.SetupSequence(r => r.Next(0, 7))
                 .Returns(0).Returns(1).Returns(2).Returns(3).Returns(4);
@@ -58,7 +59,7 @@ namespace WeatherDemo.Tests
         {
             // Arrange
             var mockRandom = new Mock<IRandomProvider>();
-            mockRandom.SetupSequence(r => r.Next(0, 10))
+            mockRandom.SetupSequence(r => r.Next(0, 16))
                 .Returns(0).Returns(1).Returns(2).Returns(3).Returns(4);
             mockRandom.Setup(r => r.Next(0, 7)).Returns(0);
             mockRandom.Setup(r => r.Next(-10, 35)).Returns(25);
@@ -78,7 +79,7 @@ namespace WeatherDemo.Tests
             // Arrange
             var mockRandom = new Mock<IRandomProvider>();
             // Ensure unique cities are selected
-            mockRandom.SetupSequence(r => r.Next(0, 10))
+            mockRandom.SetupSequence(r => r.Next(0, 16))
                 .Returns(0).Returns(1).Returns(2);
             mockRandom.SetupSequence(r => r.Next(0, 7))
                 .Returns(0).Returns(1).Returns(2);
@@ -90,9 +91,32 @@ namespace WeatherDemo.Tests
             var reports = service.GetRandomWeatherReports(3);
 
             // Assert
-            mockRandom.Verify(r => r.Next(0, 10), Times.AtLeastOnce());
+            mockRandom.Verify(r => r.Next(0, 16), Times.AtLeastOnce());
             mockRandom.Verify(r => r.Next(0, 7), Times.AtLeastOnce());
             mockRandom.Verify(r => r.Next(-10, 35), Times.AtLeastOnce());
+        }
+
+        [Fact]
+        public void WeatherService_Has_At_Least_Two_Cities_Per_Continent()
+        {
+            // Arrange & Act - Use reflection to access the private Cities array
+            var citiesField = typeof(WeatherService).GetField("Cities", 
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            var cities = (ValueTuple<string, string>[])citiesField.GetValue(null);
+
+            // Group cities by continent and count them
+            var continentCounts = cities
+                .GroupBy(city => city.Item2)
+                .ToDictionary(group => group.Key, group => group.Count());
+
+            // Assert - Every continent should have at least 2 cities
+            var expectedContinents = new[] { "North America", "Europe", "Asia", "Australia", "South America", "Africa", "Antarctica" };
+            
+            foreach (var continent in expectedContinents)
+            {
+                Assert.True(continentCounts.ContainsKey(continent), $"Missing continent: {continent}");
+                Assert.True(continentCounts[continent] >= 2, $"Continent {continent} has only {continentCounts[continent]} cities, expected at least 2");
+            }
         }
     }
 }
